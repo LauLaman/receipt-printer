@@ -2,10 +2,10 @@
 
 ## Table of Contents
 
-* [Paper Commands](#Paper Commands)
-* [Barcode and QR Code Commands](#Barcode and QR Code Commands)
-* [Layout Commands](#Layout Commands)
-* [Graphics Commands](#Graphics Commands)
+* [Paper Commands](#paper-commands)
+* [Barcode and QR Code Commands](#barcode-and-qr-code-commands)
+* [Layout Commands](#layout-commands)
+* [Graphics Commands](#graphics-commands)
 
 ---
 

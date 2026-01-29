@@ -7,12 +7,12 @@ Table of contents
 ## Star Micronics
 
 ### Star mC-Print2
-##### Paper With
- - ✅ Small
- - ❌ Large: Large paper phisically does not fit in printer
+| Paper With | ✅ Small  | ❌ Large |
+|------------|----------|---------|
 
-##### Connection
-- ✅ TCP (Socket) 
+| Connection |  ❓ Bluetooth | ❓Cups | ❓ IPP | ✅ Socket (TCP) | ❓ USB |
+|------------|----------------|-------------|------------|----------------|-------|
+
   ```php
   # Example
   $printer = $this->printerFactory->socket(
@@ -21,17 +21,14 @@ Table of contents
       '1992.168.0.111'
   );
   ```
-- ❓ Bluetooth  
-- ❓ USB
 
-### Star TSP650
-##### Paper With
-- ✅ Small
-- ✅ Large
+### Star TSP650 II
+| Paper With | ✅ Small  | ✅ Large |
+|------------|----------|---------|
 
-##### Connection
-- ✅ Bluetooth (through usb socket)
-  ```php
+| Connection |  ❓ Bluetooth | ❓Cups | ❓ IPP | ❓ Socket (TCP) | ✅ USB |
+|------------|----------------|-------------|------------|----------------|-------|
+ ```php
   # Example (tested on linux)
   $printer = $this->printerFactory->usb(
       PrinterModel::STAR_MC_PRINT2,
@@ -39,10 +36,9 @@ Table of contents
       '/dev/rfcomm0',
   );
   ```
-- ❓ TCP
-- ❓ USB
 
- 
+<hr>
+
 ## Supported Commands by Printer
 ### Barcodes
 
@@ -50,7 +46,7 @@ Table of contents
 |----------------|---------------|---------------|--------------|---------------|----------------|-------------|-----------------|----------------|--------------------|--------|---------|
 | Star mC-Print2 | ✅             | ✅             | ✅            | ✅             | ✅              | ✅           | ✅               | ✅              | ✅                  | ✅      | ✅       |
 | Star mC-Print3 | ✅             | ✅             | ✅            | ✅             | ✅              | ✅           | ✅               | ✅              | ✅                  | ✅      | ✅       |
-| Star TSP650    | ✅             | ✅             | ✅            | ✅             | ✅              | ✅           | ✅               | ✅              | ✅                  | ✅      | ✅       |
+| Star TSP650 II | ✅             | ✅             | ✅            | ✅             | ✅              | ✅           | ✅               | ✅              | ✅                  | ✅      | ✅       |
 
 ### Graphics
 
@@ -61,7 +57,7 @@ Table of contents
 |----------------|-------|--------------------|
 | Star mC-Print2 | ✅     | ❌                   |
 | Star mC-Print3 | ✅     | ❌                   |
-| Star TSP650    | ✅     | ❌                   |
+| Star TSP650 II | ✅     | ❌                   |
 
 ### Layout
 
@@ -69,7 +65,7 @@ Table of contents
 |----------------|-------|------|--------|------|--------|---------|--------|-----------|------|-----------|-----------|------------|
 | Star mC-Print2 | ✅     | ✅    | ✅      | ✅    | ✅      | ✅       | ✅      | ✅         | ✅    | ✅         | ✅         | ✅          |
 | Star mC-Print3 | ✅     | ✅    | ✅      | ✅    | ✅      | ✅       | ✅      | ✅         | ✅    | ✅         | ✅         | ✅          |
-| Star TSP650    | ✅     | ✅    | ✅      | ✅    | ✅      | ✅       | ✅      | ✅         | ✅    | ✅         | ✅         | ✅          |
+| Star TSP650 II | ✅     | ✅    | ✅      | ✅    | ✅      | ✅       | ✅      | ✅         | ✅    | ✅         | ✅         | ✅          |
 
 ### Paper
 
@@ -77,7 +73,7 @@ Table of contents
 |----------------|-----|-------------|------|------------|--------------|------------|
 | Star mC-Print2 | ✅   | ✅           | ✅    | ❓          | ❓            | ❓          | 
 | Star mC-Print3 | ✅   | ✅           | ✅    | ❓          | ❓            | ❓          |
-| Star TSP650    | ✅   | ✅           | ✅    | ❓          | ❓            | ❓          |
+| Star TSP650 II | ✅   | ✅           | ✅    | ❓          | ❓            | ❓          |
 
 
 ### Sound
@@ -89,4 +85,4 @@ Table of contents
 |----------------|--------|---------------|
 | Star mC-Print2 | ❓      | ❓             |
 | Star mC-Print3 | ❓      | ❓             |
-| Star TSP650    | ❓      | ❓             |
+| Star TSP650 II | ❓      | ❓             |
