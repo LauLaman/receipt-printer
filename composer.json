@@ -1,0 +1,46 @@
+{
+  "name": "laulaman/receipt-printer",
+  "description": "A library to print receipts",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Laurens Laman",
+      "email": "laurens.laman@llaman.nl"
+    }
+  ],
+  "keywords": [
+    "receipt",
+    "printer",
+    "thermal",
+    "point-of-sale",
+    "POS",
+    "ticket",
+    "mC-Print2",
+    "mC-Print3"
+  ],
+  "require": {
+    "php": "^8.2"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^11",
+    "php-mock/php-mock-phpunit": "^2.14"
+  },
+  "autoload": {
+    "psr-4": {
+      "LauLaman\\ReceiptPrinter\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\Unit\\LauLaman\\ReceiptPrinter\\": "tests/unit/",
+      "Tests\\Integration\\LauLaman\\ReceiptPrinter\\": "tests/integration/"
+    }
+  },
+  "scripts": {
+    "test": "vendor/bin/phpunit -c ./phpunit.xml",
+    "test-coverage": "vendor/bin/phpunit -c ./phpunit.xml --coverage-html coverage"
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}

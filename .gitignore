@@ -1,0 +1,33 @@
+# Composer
+composer.lock
+vendor/
+
+# PHPUnit / Testing
+.phpunit.cache/
+.phpunit.result.cache
+coverage/
+.coverage
+build/
+
+# PHP CS Fixer / Code Style
+.php-cs-fixer.cache
+.php_cs.cache
+
+# PHPStan / Psalm
+.phpstan.cache/
+psalm.xml
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.settings/
+.buildpath
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
