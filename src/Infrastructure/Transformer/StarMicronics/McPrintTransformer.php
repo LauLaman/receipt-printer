@@ -48,7 +48,7 @@ class McPrintTransformer implements PrinterTransformer
 
     public function supports(PrinterModel $model): bool
     {
-        return $model === PrinterModel::STAR_MC_PRINT2 || $model === PrinterModel::STAR_MC_PRINT3;
+        return $model === PrinterModel::STAR_MC_PRINT2 || $model === PrinterModel::STAR_MC_PRINT3 || $model === PrinterModel::STAR_TSP650_II;
     }
 
     /**
