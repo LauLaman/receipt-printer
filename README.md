@@ -4,7 +4,8 @@
 
 ### Features
 
-* **Builder-style API** with chaining
+* **Supports multiple printers and models** ([tested printers](./docs/tested-printers.md))
+* **Builder-style API** with chaining ([api-reference](./docs/api-reference.md))
 * **Text formatting**: bold, invert, alignment, text size, font type
 * **Columns** for items and prices
 * **Separator lines**, feed, and cut
@@ -37,7 +38,13 @@ $printerFactory = PrinterFactory::create();
 // Or construct it yourself:
 $printerFactory = new PrinterFactory(
     new McPrintTransformer(
-        new McPrintTextNormalizer()
+        new McPrintTextNormalizer(),
+        new SettingsTransformer(),
+        new LayoutTransformer(),
+        new PaperTransformer(),
+        new BarcodeTransformer(),
+        new GraphicsTransformer(),
+        new SoundTransformer(),
     )
 );
 ```

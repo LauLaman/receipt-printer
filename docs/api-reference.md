@@ -2,10 +2,10 @@
 
 ## Table of Contents
 
-* [Paper Commands](#paper-commands)
-* [Barcode / QR Code Commands](#barcode--qr-code-commands)
-* [Layout Commands](#layout-commands)
-* [Graphics Commands](#graphics-commands)
+* [Paper Commands](#Paper Commands)
+* [Barcode and QR Code Commands](#Barcode and QR Code Commands)
+* [Layout Commands](#Layout Commands)
+* [Graphics Commands](#Graphics Commands)
 
 ---
 
@@ -59,7 +59,7 @@ Sets the printing speed of the printer.
 
 ---
 
-## Barcode / QR Code Commands
+## Barcode and QR Code Commands
 
 ### `LauLaman\ReceiptPrinter\Domain\Command\Barcode\Barcode`
 
