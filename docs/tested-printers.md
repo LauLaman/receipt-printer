@@ -2,7 +2,7 @@
 
 Table of contents
 #### Manufacturer
-- [Star Micronics](#Star Micronics)
+- [Star Micronics](#star-micronics)
 
 ## Star Micronics
 
@@ -10,15 +10,24 @@ Table of contents
 | Paper With | ✅ Small  | ❌ Large |
 |------------|----------|---------|
 
-| Connection |  ❓ Bluetooth | ❓Cups | ❓ IPP | ✅ Socket (TCP) | ❓ USB |
-|------------|----------------|-------------|------------|----------------|-------|
+| Connection |  ❓ Bluetooth | ❓Cups | ❓ IPP | ✅ Socket (TCP) | ✅ USB |
+|------------|----------------|-------------|------------|----------------|------|
 
   ```php
-  # Example
+  # Example (tested on macOS)
   $printer = $this->printerFactory->socket(
       PrinterModel::STAR_MC_PRINT2,
       PaperWidth::SMALL,
-      '1992.168.0.111'
+      '192.168.0.111'
+  );
+  ```
+
+```php
+  # Example (tested on linux)
+  $printer = $this->printerFactory->usb(
+      PrinterModel::STAR_MC_PRINT2,
+      PaperWidth::SMALL,
+      '/dev/usb/lp0',
   );
   ```
 
