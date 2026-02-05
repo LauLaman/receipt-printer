@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\LauLaman\ReceiptPrinter\Infrastructure\Transport;
 
 use LauLaman\ReceiptPrinter\Infrastructure\Php\ExecRunner;
-use LauLaman\ReceiptPrinter\Infrastructure\Transport\IppTransport;
+use LauLaman\ReceiptPrinter\Infrastructure\Transport\IppTransportInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -24,7 +24,7 @@ final class IppTransportTest extends TestCase
                 $returnVar = 0;
             });
 
-        $transport = new IppTransport('12345678901234', $mockRunner);
+        $transport = new IppTransportInterface('12345678901234', $mockRunner);
         $transport->write('Hello Printer');
     }
 
@@ -43,7 +43,7 @@ final class IppTransportTest extends TestCase
                 $returnVar = 1; // non-zero triggers exception
             });
 
-        $transport = new IppTransport(
+        $transport = new IppTransportInterface(
             '12345678901234',
             $mockRunner
         );

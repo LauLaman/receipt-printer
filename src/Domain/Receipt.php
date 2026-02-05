@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LauLaman\ReceiptPrinter\Domain;
 
 use LauLaman\ReceiptPrinter\Domain\Command\Command;
-use LauLaman\ReceiptPrinter\Domain\Settings\PrintSetting;
+use LauLaman\ReceiptPrinter\Domain\PrinterSetting\PrintSetting\PrintSetting;
 
 final readonly class Receipt
 {

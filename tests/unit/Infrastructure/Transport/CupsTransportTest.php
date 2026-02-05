@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\LauLaman\ReceiptPrinter\Infrastructure\Transport;
 
 use LauLaman\ReceiptPrinter\Infrastructure\Php\ProcessRunner;
-use LauLaman\ReceiptPrinter\Infrastructure\Transport\CupsTransport;
+use LauLaman\ReceiptPrinter\Infrastructure\Transport\CupsTransportInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -30,7 +30,7 @@ final class CupsTransportTest extends TestCase
             ->method('close')
             ->with($this->isType('resource'));
 
-        $transport = new CupsTransport('TestPrinter', $mockRunner);
+        $transport = new CupsTransportInterface('TestPrinter', $mockRunner);
 
         // Should not throw
         $transport->write('Hello World');
@@ -44,7 +44,7 @@ final class CupsTransportTest extends TestCase
             ->method('run')
             ->willReturn(false); // simulate failure
 
-        $transport = new CupsTransport('TestPrinter', $mockRunner);
+        $transport = new CupsTransportInterface('TestPrinter', $mockRunner);
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Failed to open CUPS printer');

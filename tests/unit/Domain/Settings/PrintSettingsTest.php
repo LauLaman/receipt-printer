@@ -7,12 +7,12 @@ namespace Tests\Unit\LauLaman\ReceiptPrinter\Domain\Settings;
 use InvalidArgumentException;
 use LauLaman\ReceiptPrinter\Domain\Enum\PaperWidth;
 use LauLaman\ReceiptPrinter\Domain\Enum\PrinterModel;
-use LauLaman\ReceiptPrinter\Domain\Settings\PaperWidthSetting;
-use LauLaman\ReceiptPrinter\Domain\Settings\PrinterModelSetting;
-use LauLaman\ReceiptPrinter\Domain\Settings\PrintSettings;
-use LauLaman\ReceiptPrinter\Domain\Settings\PrintSetting;
+use LauLaman\ReceiptPrinter\Domain\PrinterSetting\PrinterModelSetting;
+use LauLaman\ReceiptPrinter\Domain\PrinterSetting\PrintSetting\PrintSetting;
+use LauLaman\ReceiptPrinter\Domain\PrinterSetting\PrintSettings;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use PrintSetting\PrintableAreaSetting;
 
 final class PrintSettingsTest extends TestCase
 {
@@ -43,12 +43,12 @@ final class PrintSettingsTest extends TestCase
     {
         $settings = new PrintSettings();
 
-        $settingA = new PaperWidthSetting(PaperWidth::SMALL, 33);
+        $settingA = new PrintableAreaSetting(PaperWidth::SMALL, 33);
         $settingB = new PrinterModelSetting(PrinterModel::STAR_MC_PRINT2);
 
         $settings->add($settingA, $settingB);
 
-        $this->assertSame($settingA, $settings->get(PaperWidthSetting::class));
+        $this->assertSame($settingA, $settings->get(PrintableAreaSetting::class));
         $this->assertSame($settingB, $settings->get(PrinterModelSetting::class));
     }
 
@@ -57,14 +57,14 @@ final class PrintSettingsTest extends TestCase
     {
         $settings = new PrintSettings();
 
-        $settingA = new PaperWidthSetting(PaperWidth::SMALL, 33);
+        $settingA = new PrintableAreaSetting(PaperWidth::SMALL, 33);
         $settingB = new PrinterModelSetting(PrinterModel::STAR_MC_PRINT2);
 
         $settings->add($settingA, $settingB);
 
         $this->assertSame(
             [
-                PaperWidthSetting::class => $settingA,
+                PrintableAreaSetting::class => $settingA,
                 PrinterModelSetting::class => $settingB,
             ],
             $settings->all()

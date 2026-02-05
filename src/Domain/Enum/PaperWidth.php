@@ -16,4 +16,9 @@ enum PaperWidth
             self::LARGE => 80,
         };
     }
+
+    public function getInches(): float
+    {
+        return $this->getMM() / 25.4;
+    }
 }

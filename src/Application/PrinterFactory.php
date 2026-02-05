@@ -4,117 +4,117 @@ declare(strict_types=1);
 
 namespace LauLaman\ReceiptPrinter\Application;
 
-use LauLaman\ReceiptPrinter\Domain\Transformer\PrinterTransformer;
-use LauLaman\ReceiptPrinter\Domain\Enum\PaperWidth;
-use LauLaman\ReceiptPrinter\Domain\Enum\PrinterModel;
-use LauLaman\ReceiptPrinter\Infrastructure\Normalizer\StarMicronics\McPrintTextNormalizer;
-use LauLaman\ReceiptPrinter\Infrastructure\Transformer\StarMicronics\McPrintTransformer;
-use LauLaman\ReceiptPrinter\Infrastructure\Transport\BluetoothTransport;
-use LauLaman\ReceiptPrinter\Infrastructure\Transport\CupsTransport;
-use LauLaman\ReceiptPrinter\Infrastructure\Transport\IppTransport;
-use LauLaman\ReceiptPrinter\Infrastructure\Transport\SocketTransport;
-use LauLaman\ReceiptPrinter\Infrastructure\Transport\UsbTransport;
+use LauLaman\ReceiptPrinter\Domain\Contract\PrinterDriverInterface;
+use LauLaman\ReceiptPrinter\Domain\Enum\PrinterModelInterface;
+use LauLaman\ReceiptPrinter\Domain\PrinterSettings;
+use LauLaman\ReceiptPrinter\StarMicronics\Driver\StarMicronicsPrinterDriverFactory;
+use LauLaman\ReceiptPrinter\Infrastructure\Transport\BluetoothTransportInterface;
+use LauLaman\ReceiptPrinter\Infrastructure\Transport\CupsTransportInterface;
+use LauLaman\ReceiptPrinter\Infrastructure\Transport\IppTransportInterface;
+use LauLaman\ReceiptPrinter\Infrastructure\Transport\SocketTransportInterface;
+use LauLaman\ReceiptPrinter\Infrastructure\Transport\UsbTransportInterface;
+use LogicException;
 
 final readonly class PrinterFactory
 {
 
-    /** @var PrinterTransformer[] */
-    private array $printerTransformers;
+    /** @var PrinterDriverInterface[] */
+    private array $printerDrivers;
 
     public function __construct(
-        McPrintTransformer $mcPrintTransformer,
+        PrinterDriverInterface ...$printerDrivers,
     ) {
-        $this->printerTransformers = [$mcPrintTransformer];
+        $this->printerDrivers = $printerDrivers;
     }
 
+    /**
+     * @deprecated inject all  PrinterDriverInterface[] in constructor
+     */
     public static function create(): PrinterFactory
     {
-        return new self(McPrintTransformer::create(new McPrintTextNormalizer()));
+        return new self(...[
+            StarMicronicsPrinterDriverFactory::create()
+        ]);
     }
 
     /**
      * Build a printer with socket/network transport
      */
     public function socket(
-        PrinterModel $model,
-        PaperWidth $paper,
+        PrinterSettings $settings,
         string $host,
         int $port = 9100
     ): Printer {
-        $transformer = $this->getTransformer($model);
-        $transport = new SocketTransport($host, $port);
+        $transformer = $this->getDriver($settings->model);
+        $transport = new SocketTransportInterface($host, $port);
 
-        return new Printer($model, $paper, $transformer, $transport);
+        return new Printer($settings, $transformer, $transport);
     }
 
     /**
      * Build a printer with USB transport (Linux)
      */
     public function usb(
-        PrinterModel $model,
-        PaperWidth $paper,
+        PrinterSettings $settings,
         string $device = '/dev/usb/lp0'
     ): Printer {
-        $transformer = $this->getTransformer($model);
-        $transport = new UsbTransport($device);
+        $transformer = $this->getDriver($settings->model);
+        $transport = new UsbTransportInterface($device);
 
-        return new Printer($model, $paper, $transformer, $transport);
+        return new Printer($settings, $transformer, $transport);
     }
 
     /**
      * Build a printer with CUPS transport (macOS/Linux)
      */
     public function cups(
-        PrinterModel $model,
-        PaperWidth $paper,
+        PrinterSettings $settings,
         string $printerName
     ): Printer {
-        $transformer = $this->getTransformer($model);
-        $transport = new CupsTransport($printerName);
+        $transformer = $this->getDriver($settings->model);
+        $transport = new CupsTransportInterface($printerName);
 
-        return new Printer($model, $paper, $transformer, $transport);
+        return new Printer($settings, $transformer, $transport);
     }
 
     /**
      * Build a printer with Bluetooth transport
      */
     public function bluetooth(
-        PrinterModel $model,
-        PaperWidth $paper,
+        PrinterSettings $settings,
         string $address,
         int $channel = 1
     ): Printer {
-        $transformer = $this->getTransformer($model);
-        $transport = new BluetoothTransport($address, $channel);
+        $transformer = $this->getDriver($settings->model);
+        $transport = new BluetoothTransportInterface($address, $channel);
 
-        return new Printer($model, $paper, $transformer, $transport);
+        return new Printer($settings, $transformer, $transport);
     }
 
     /**
      * Build a printer with IPP transport
      */
     public function Ipp(
-        PrinterModel $model,
-        PaperWidth $paper,
+        PrinterSettings $settings,
         string $serial,
     ): Printer {
-        $transformer = $this->getTransformer($model);
-        $transport = new IppTransport($serial);
+        $transformer = $this->getDriver($settings->model);
+        $transport = new IppTransportInterface($serial);
 
-        return new Printer($model, $paper, $transformer, $transport);
+        return new Printer($settings, $transformer, $transport);
     }
 
     /**
      * Get the appropriate transformer for the printer model
      */
-    private function getTransformer(PrinterModel $model): PrinterTransformer
+    private function getDriver(PrinterModelInterface $model): PrinterDriverInterface
     {
-        foreach ($this->printerTransformers as $printerTransformer) {
+        foreach ($this->printerDrivers as $printerTransformer) {
             if ($printerTransformer->supports($model)) {
                 return $printerTransformer;
             }
         }
 
-        throw new \LogicException("No transformer implemented for model: {$model->name}");
+        throw new LogicException("No transformer implemented for model: {$model->name}");
     }
 }

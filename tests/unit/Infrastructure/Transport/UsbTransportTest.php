@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\LauLaman\ReceiptPrinter\Infrastructure\Transport;
 
 use LauLaman\ReceiptPrinter\Infrastructure\Php\UsbWrapper;
-use LauLaman\ReceiptPrinter\Infrastructure\Transport\UsbTransport;
+use LauLaman\ReceiptPrinter\Infrastructure\Transport\UsbTransportInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -13,8 +13,8 @@ final class UsbTransportTest extends TestCase
 {
     public function testCanInstantiateUsbTransport(): void
     {
-        $transport = new UsbTransport('/dev/test');
-        $this->assertInstanceOf(UsbTransport::class, $transport);
+        $transport = new UsbTransportInterface('/dev/test');
+        $this->assertInstanceOf(UsbTransportInterface::class, $transport);
     }
 
     #[Test]
@@ -45,7 +45,7 @@ final class UsbTransportTest extends TestCase
         // flush() called each time write happens
         $wrapper->method('flush')->willReturnCallback(fn($h) => true);
 
-        $transport = new UsbTransport('/dev/test', $wrapper);
+        $transport = new UsbTransportInterface('/dev/test', $wrapper);
 
         $transport->write('HELLO');
         $transport->write('WORLD');
@@ -63,7 +63,7 @@ final class UsbTransportTest extends TestCase
             ->method('open')
             ->willReturn(false);
 
-        $transport = new UsbTransport('/dev/test', $wrapper);
+        $transport = new UsbTransportInterface('/dev/test', $wrapper);
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Failed to open USB device');
@@ -84,7 +84,7 @@ final class UsbTransportTest extends TestCase
             ->method('write')
             ->willReturn(false);
 
-        $transport = new UsbTransport('/dev/test', $wrapper);
+        $transport = new UsbTransportInterface('/dev/test', $wrapper);
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Failed to write all data to USB device.');

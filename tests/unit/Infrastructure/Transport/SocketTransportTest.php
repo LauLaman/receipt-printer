@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\LauLaman\ReceiptPrinter\Infrastructure\Transport;
 
-use LauLaman\ReceiptPrinter\Infrastructure\Transport\SocketTransport;
+use LauLaman\ReceiptPrinter\Infrastructure\Transport\SocketTransportInterface;
 use LauLaman\ReceiptPrinter\Infrastructure\Php\SocketWrapper;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -37,7 +37,7 @@ final class SocketTransportTest extends TestCase
         // flush() can also be called multiple times
         $mockWrapper->method('flush')->willReturnCallback(fn($socket) => null);
 
-        $transport = new SocketTransport('localhost', 9100, $mockWrapper);
+        $transport = new SocketTransportInterface('localhost', 9100, $mockWrapper);
 
         $transport->write('Hello');
         $transport->write('Socket');
@@ -61,7 +61,7 @@ final class SocketTransportTest extends TestCase
             ->with($mockSocket, 'fail')
             ->willReturn(false);
 
-        $transport = new SocketTransport('localhost', 9100, $mockWrapper);
+        $transport = new SocketTransportInterface('localhost', 9100, $mockWrapper);
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Failed to write all data to socket.');
@@ -79,7 +79,7 @@ final class SocketTransportTest extends TestCase
             ->method('open')
             ->willReturn(false);
 
-        $transport = new SocketTransport('localhost', 9100, $mockWrapper);
+        $transport = new SocketTransportInterface('localhost', 9100, $mockWrapper);
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessageMatches('/Socket connection failed/');
@@ -98,10 +98,10 @@ final class SocketTransportTest extends TestCase
             ->method('close')
             ->with($mockSocket);
 
-        $transport = new SocketTransport('localhost', 9100, $mockWrapper);
+        $transport = new SocketTransportInterface('localhost', 9100, $mockWrapper);
 
         // Manually inject the socket for the destructor
-        $ref = new \ReflectionProperty(SocketTransport::class, 'socket');
+        $ref = new \ReflectionProperty(SocketTransportInterface::class, 'socket');
         $ref->setAccessible(true);
         $ref->setValue($transport, $mockSocket);
 

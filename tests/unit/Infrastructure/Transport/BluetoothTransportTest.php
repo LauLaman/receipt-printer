@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\LauLaman\ReceiptPrinter\Infrastructure\Transport;
 
 use LauLaman\ReceiptPrinter\Infrastructure\Php\SocketWrapper;
-use LauLaman\ReceiptPrinter\Infrastructure\Transport\BluetoothTransport;
+use LauLaman\ReceiptPrinter\Infrastructure\Transport\BluetoothTransportInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -29,7 +29,7 @@ final class BluetoothTransportTest extends TestCase
             // do nothing
         });
 
-        $transport = new BluetoothTransport('00:11:22:33:44:55', 1, $wrapper);
+        $transport = new BluetoothTransportInterface('00:11:22:33:44:55', 1, $wrapper);
 
         $transport->write('Hello');
         $transport->write('World');
@@ -47,7 +47,7 @@ final class BluetoothTransportTest extends TestCase
         $wrapper->method('open')->willReturn($socket);
         $wrapper->method('write')->with($socket, 'Hello')->willReturn(2); // simulate partial write
 
-        $transport = new BluetoothTransport('00:11:22:33:44:55', 1, $wrapper);
+        $transport = new BluetoothTransportInterface('00:11:22:33:44:55', 1, $wrapper);
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Failed to write all data');
@@ -61,7 +61,7 @@ final class BluetoothTransportTest extends TestCase
         $wrapper = $this->createMock(SocketWrapper::class);
         $wrapper->method('open')->willReturn(false);
 
-        $transport = new BluetoothTransport('00:11:22:33:44:55', 1, $wrapper);
+        $transport = new BluetoothTransportInterface('00:11:22:33:44:55', 1, $wrapper);
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Bluetooth connection failed');
@@ -78,10 +78,10 @@ final class BluetoothTransportTest extends TestCase
         $wrapper->method('open')->willReturn($socket);
         $wrapper->expects($this->once())->method('close')->with($socket);
 
-        $transport = new BluetoothTransport('00:11:22:33:44:55', 1, $wrapper);
+        $transport = new BluetoothTransportInterface('00:11:22:33:44:55', 1, $wrapper);
 
         // Manually set the socket to simulate open()
-        $reflection = new \ReflectionProperty(BluetoothTransport::class, 'socket');
+        $reflection = new \ReflectionProperty(BluetoothTransportInterface::class, 'socket');
         $reflection->setAccessible(true);
         $reflection->setValue($transport, $socket);
 

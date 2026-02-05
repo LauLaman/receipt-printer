@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Tests\Unit\LauLaman\ReceiptPrinter\Application;
 
-use LauLaman\ReceiptPrinter\Application\PrinterFactory;
 use LauLaman\ReceiptPrinter\Application\Printer;
+use LauLaman\ReceiptPrinter\Application\PrinterFactory;
+use LauLaman\ReceiptPrinter\Domain\Contract\PrinterDriverInterface;
 use LauLaman\ReceiptPrinter\Domain\Enum\PaperWidth;
 use LauLaman\ReceiptPrinter\Domain\Enum\PrinterModel;
-use LauLaman\ReceiptPrinter\Domain\Transformer\PrinterTransformer;
-use LauLaman\ReceiptPrinter\Infrastructure\Transport\BluetoothTransport;
-use LauLaman\ReceiptPrinter\Infrastructure\Transport\CupsTransport;
-use LauLaman\ReceiptPrinter\Infrastructure\Transport\IppTransport;
-use LauLaman\ReceiptPrinter\Infrastructure\Transport\SocketTransport;
-use LauLaman\ReceiptPrinter\Infrastructure\Transport\UsbTransport;
+use LauLaman\ReceiptPrinter\Infrastructure\Transport\BluetoothTransportInterface;
+use LauLaman\ReceiptPrinter\Infrastructure\Transport\CupsTransportInterface;
+use LauLaman\ReceiptPrinter\Infrastructure\Transport\IppTransportInterface;
+use LauLaman\ReceiptPrinter\Infrastructure\Transport\SocketTransportInterface;
+use LauLaman\ReceiptPrinter\Infrastructure\Transport\UsbTransportInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -40,7 +40,7 @@ final class PrinterFactoryTest extends TestCase
         $this->assertInstanceOf(Printer::class, $printer);
 
         $transport = (new \ReflectionProperty(Printer::class, 'transport'))->getValue($printer);
-        $this->assertInstanceOf(SocketTransport::class, $transport);
+        $this->assertInstanceOf(SocketTransportInterface::class, $transport);
     }
 
     #[Test]
@@ -56,7 +56,7 @@ final class PrinterFactoryTest extends TestCase
         $this->assertInstanceOf(Printer::class, $printer);
 
         $transport = (new \ReflectionProperty(Printer::class, 'transport'))->getValue($printer);
-        $this->assertInstanceOf(UsbTransport::class, $transport);
+        $this->assertInstanceOf(UsbTransportInterface::class, $transport);
     }
 
     #[Test]
@@ -72,7 +72,7 @@ final class PrinterFactoryTest extends TestCase
         $this->assertInstanceOf(Printer::class, $printer);
 
         $transport = (new \ReflectionProperty(Printer::class, 'transport'))->getValue($printer);
-        $this->assertInstanceOf(CupsTransport::class, $transport);
+        $this->assertInstanceOf(CupsTransportInterface::class, $transport);
     }
 
     #[Test]
@@ -89,7 +89,7 @@ final class PrinterFactoryTest extends TestCase
         $this->assertInstanceOf(Printer::class, $printer);
 
         $transport = (new \ReflectionProperty(Printer::class, 'transport'))->getValue($printer);
-        $this->assertInstanceOf(BluetoothTransport::class, $transport);
+        $this->assertInstanceOf(BluetoothTransportInterface::class, $transport);
     }
 
 
@@ -107,7 +107,7 @@ final class PrinterFactoryTest extends TestCase
         $this->assertInstanceOf(Printer::class, $printer);
 
         $transport = (new \ReflectionProperty(Printer::class, 'transport'))->getValue($printer);
-        $this->assertInstanceOf(IppTransport::class, $transport);
+        $this->assertInstanceOf(IppTransportInterface::class, $transport);
     }
 
 
@@ -115,7 +115,7 @@ final class PrinterFactoryTest extends TestCase
     public function itThrowsIfNoTransformerSupportsTheModel(): void
     {
         // Create a mock transformer that does NOT support the model
-        $mockTransformer = $this->createMock(PrinterTransformer::class);
+        $mockTransformer = $this->createMock(PrinterDriverInterface::class);
         $mockTransformer->method('supports')->willReturn(false);
 
         // Create a factory with the mock transformer injected

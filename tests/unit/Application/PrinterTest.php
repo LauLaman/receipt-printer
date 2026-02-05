@@ -6,24 +6,24 @@ namespace Tests\Unit\LauLaman\ReceiptPrinter\Application;
 
 use LauLaman\ReceiptPrinter\Application\Printer;
 use LauLaman\ReceiptPrinter\Domain\Command\Command;
-use LauLaman\ReceiptPrinter\Domain\Receipt;
-use LauLaman\ReceiptPrinter\Domain\Settings\PrinterModelSetting;
-use LauLaman\ReceiptPrinter\Domain\Settings\PaperWidthSetting;
-use LauLaman\ReceiptPrinter\Domain\Settings\PrintSetting;
-use LauLaman\ReceiptPrinter\Domain\Settings\PrintSettings;
-use LauLaman\ReceiptPrinter\Domain\Transformer\PrinterTransformer;
-use LauLaman\ReceiptPrinter\Domain\Transport\PrinterTransport;
+use LauLaman\ReceiptPrinter\Domain\Contract\PrinterDriverInterface;
+use LauLaman\ReceiptPrinter\Domain\Contract\PrinterTransportInterface;
 use LauLaman\ReceiptPrinter\Domain\Enum\PaperWidth;
 use LauLaman\ReceiptPrinter\Domain\Enum\PrinterModel;
+use LauLaman\ReceiptPrinter\Domain\PrinterSetting\PrinterModelSetting;
+use LauLaman\ReceiptPrinter\Domain\PrinterSetting\PrintSetting\PrintSetting;
+use LauLaman\ReceiptPrinter\Domain\PrinterSetting\PrintSettings;
+use LauLaman\ReceiptPrinter\Domain\Receipt;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use PrintSetting\PrintableAreaSetting;
 
 final class PrinterTest extends TestCase
 {
     private PrinterModel $model;
     private PaperWidth $paper;
-    private PrinterTransformer $transformer;
-    private PrinterTransport $transport;
+    private PrinterDriverInterface $transformer;
+    private PrinterTransportInterface $transport;
     private Printer $printer;
 
     protected function setUp(): void
@@ -31,8 +31,8 @@ final class PrinterTest extends TestCase
         $this->model = PrinterModel::STAR_MC_PRINT2;
         $this->paper = PaperWidth::SMALL;
 
-        $this->transformer = $this->createMock(PrinterTransformer::class);
-        $this->transport = $this->createMock(PrinterTransport::class);
+        $this->transformer = $this->createMock(PrinterDriverInterface::class);
+        $this->transport = $this->createMock(PrinterTransportInterface::class);
 
         $this->printer = new Printer(
             $this->model,
@@ -49,12 +49,12 @@ final class PrinterTest extends TestCase
 
         $this->transformer
             ->expects($this->once())
-            ->method('transform')
+            ->method('encode')
             ->with(
                 $this->callback(function(PrintSettings $settings) {
                     $all = $settings->all();
                     return isset($all[PrinterModelSetting::class])
-                        && isset($all[PaperWidthSetting::class]);
+                        && isset($all[PrintableAreaSetting::class]);
                 }),
                 $command
             )
@@ -80,7 +80,7 @@ final class PrinterTest extends TestCase
 
         $this->transformer
             ->expects($this->once())
-            ->method('transform')
+            ->method('encode')
             ->with(
                 $this->isInstanceOf(PrintSettings::class),
                 $command
@@ -103,12 +103,12 @@ final class PrinterTest extends TestCase
 
         $this->transformer
             ->expects($this->once())
-            ->method('transform')
+            ->method('encode')
             ->with(
                 $this->callback(function(PrintSettings $settings) use ($extraSetting) {
                     $all = $settings->all();
                     return isset($all[PrinterModelSetting::class])
-                        && isset($all[PaperWidthSetting::class])
+                        && isset($all[PrintableAreaSetting::class])
                         && in_array($extraSetting, $all, true);
                 }),
                 $command

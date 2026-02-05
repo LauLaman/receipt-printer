@@ -4,32 +4,31 @@ declare(strict_types=1);
 
 namespace Tests\Unit\LauLaman\ReceiptPrinter\Application;
 
-use LauLaman\ReceiptPrinter\Application\ReceiptBuilder;
-use LauLaman\ReceiptPrinter\Domain\Command\Barcode\Barcode;
-use LauLaman\ReceiptPrinter\Domain\Command\Barcode\GS1DataBarExpanded;
-use LauLaman\ReceiptPrinter\Domain\Command\Barcode\Pdf417;
-use LauLaman\ReceiptPrinter\Domain\Command\Barcode\QRCode;
-use LauLaman\ReceiptPrinter\Domain\Command\Graphics\ImageFile;
-use LauLaman\ReceiptPrinter\Domain\Command\Graphics\Logo;
+use LauLaman\ReceiptPrinter\Domain\Command\Action\Cut;
+use LauLaman\ReceiptPrinter\Domain\Command\Action\Feed;
+use LauLaman\ReceiptPrinter\Domain\Command\Action\OpenDrawer;
+use LauLaman\ReceiptPrinter\Domain\Command\Draw\Barcode;
+use LauLaman\ReceiptPrinter\Domain\Command\Draw\Column;
+use LauLaman\ReceiptPrinter\Domain\Command\Draw\GS1DataBarExpanded;
+use LauLaman\ReceiptPrinter\Domain\Command\Draw\ImageFile;
+use LauLaman\ReceiptPrinter\Domain\Command\Draw\Logo;
+use LauLaman\ReceiptPrinter\Domain\Command\Draw\Pdf417;
+use LauLaman\ReceiptPrinter\Domain\Command\Draw\QRCode;
+use LauLaman\ReceiptPrinter\Domain\Command\Draw\Separator;
+use LauLaman\ReceiptPrinter\Domain\Command\Draw\Text;
 use LauLaman\ReceiptPrinter\Domain\Command\Layout\Align;
-use LauLaman\ReceiptPrinter\Domain\Command\Layout\Bold;
-use LauLaman\ReceiptPrinter\Domain\Command\Layout\Column;
-use LauLaman\ReceiptPrinter\Domain\Command\Layout\Font;
-use LauLaman\ReceiptPrinter\Domain\Command\Layout\Invert;
-use LauLaman\ReceiptPrinter\Domain\Command\Layout\Magnify;
-use LauLaman\ReceiptPrinter\Domain\Command\Layout\Separator;
-use LauLaman\ReceiptPrinter\Domain\Command\Layout\Text;
-use LauLaman\ReceiptPrinter\Domain\Command\Layout\Underline;
-use LauLaman\ReceiptPrinter\Domain\Command\Layout\Upperline;
-use LauLaman\ReceiptPrinter\Domain\Command\Layout\UpsideDown;
-use LauLaman\ReceiptPrinter\Domain\Command\Paper\Cut;
-use LauLaman\ReceiptPrinter\Domain\Command\Paper\Feed;
-use LauLaman\ReceiptPrinter\Domain\Command\Paper\OpenDrawer;
-use LauLaman\ReceiptPrinter\Domain\Receipt;
+use LauLaman\ReceiptPrinter\Domain\Command\Style\Bold;
+use LauLaman\ReceiptPrinter\Domain\Command\Style\Font;
+use LauLaman\ReceiptPrinter\Domain\Command\Style\Invert;
+use LauLaman\ReceiptPrinter\Domain\Command\Style\Magnify;
+use LauLaman\ReceiptPrinter\Domain\Command\Style\Negative;
+use LauLaman\ReceiptPrinter\Domain\Command\Style\Underline;
+use LauLaman\ReceiptPrinter\Domain\Command\Style\Upperline;
 use LauLaman\ReceiptPrinter\Domain\Enum\Alignment;
 use LauLaman\ReceiptPrinter\Domain\Enum\BarcodeType;
 use LauLaman\ReceiptPrinter\Domain\Enum\FontType;
 use LauLaman\ReceiptPrinter\Domain\Enum\QRCodeErrorCorrection;
+use LauLaman\ReceiptPrinter\Domain\ReceiptBuilder;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -74,11 +73,11 @@ final class ReceiptBuilderTest extends TestCase
             ->build();
 
         $commands = $receipt->getCommands();
-        $this->assertInstanceOf(Invert::class, $commands[0]);
+        $this->assertInstanceOf(Negative::class, $commands[0]);
         $this->assertInstanceOf(Magnify::class, $commands[1]);
         $this->assertInstanceOf(Underline::class, $commands[2]);
         $this->assertInstanceOf(Upperline::class, $commands[3]);
-        $this->assertInstanceOf(UpsideDown::class, $commands[4]);
+        $this->assertInstanceOf(Invert::class, $commands[4]);
     }
 
     #[Test]
